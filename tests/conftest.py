@@ -1,11 +1,13 @@
 """Shared pytest fixtures for cs2-arb-dashboard tests."""
 from __future__ import annotations
 
+from typing import Any
+
 import pytest
 
 
 @pytest.fixture
-def sample_odds() -> dict:
+def sample_odds() -> dict[str, Any]:
     """Return sample odds data for testing."""
     return {
         "home_team": "Team Vitality",
