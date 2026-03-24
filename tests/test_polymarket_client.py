@@ -1,6 +1,6 @@
 """Unit tests for PolymarketClient.
 
-All HTTP calls are mocked — no network access required.
+All HTTP calls are mocked - no network access required.
 """
 from __future__ import annotations
 
@@ -92,7 +92,7 @@ class TestGetCs2Markets:
         with pytest.raises(requests.HTTPError):
             client.get_cs2_markets()
 
-        # Only called once — no retry on 4xx
+        # Only called once - no retry on 4xx
         assert mock_session.get.call_count == 1
 
     def test_raises_http_error_on_5xx_after_retries(self) -> None:
@@ -114,7 +114,7 @@ class TestGetCs2Markets:
 
 class TestGetMarketPrices:
     def test_mid_key_response(self) -> None:
-        """CLOB {"mid": "0.65"} → {market_id: 0.65}."""
+        """CLOB {"mid": "0.65"} -> {market_id: 0.65}."""
         client, mock_session = _make_client()
         mock_session.get.return_value = _make_response({"mid": "0.65"})
 
@@ -123,7 +123,7 @@ class TestGetMarketPrices:
         assert result == {"cond123": pytest.approx(0.65)}
 
     def test_midpoints_key_response(self) -> None:
-        """CLOB {"midpoints": {tok: price}} → {tok: float(price)}."""
+        """CLOB {"midpoints": {tok: price}} -> {tok: float(price)}."""
         client, mock_session = _make_client()
         payload = {"midpoints": {"tok1": "0.4", "tok2": "0.6"}}
         mock_session.get.return_value = _make_response(payload)
