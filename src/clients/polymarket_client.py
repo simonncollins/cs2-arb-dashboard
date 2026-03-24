@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 
 def _is_retryable(exc: BaseException) -> bool:
-    """Return True for 429 / 5xx HTTP errors — these warrant a retry."""
+    """Return True for 429 / 5xx HTTP errors - these warrant a retry."""
     if isinstance(exc, requests.HTTPError):
         status = exc.response.status_code if exc.response is not None else 0
         return status == 429 or status >= 500
@@ -96,7 +96,7 @@ class PolymarketClient:
             market_id: The ``conditionId`` from Gamma, used as the CLOB token ID.
 
         Returns:
-            Dict mapping token_id → mid-point price in [0.0, 1.0].
+            Dict mapping token_id -> mid-point price in [0.0, 1.0].
             - If the response contains a single ``"mid"`` key the returned dict
               has one entry: ``{market_id: <price>}``.
             - If the response contains a ``"midpoints"`` dict each entry is
