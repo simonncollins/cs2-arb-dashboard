@@ -45,7 +45,7 @@ def test_env_example_keys_documented() -> None:
     required_keys = [
         "ODDS_API_KEY",
         "POLYMARKET_CLOB_HOST",
-        "ARB_MIN_PROFIT_THRESHOLD",
+        "MIN_ARBITRAGE_EDGE_PCT",  # aligned with config.py
         "CACHE_TTL_SECONDS",
         "LOG_LEVEL",
     ]
