@@ -5,11 +5,16 @@ import logging
 from typing import Any
 
 import requests
+from cachetools import TTLCache, cached
 from tenacity import retry, retry_if_exception, stop_after_attempt, wait_exponential
 
+# TODO: migrate to from app.config import settings once #51 lands
 import config
 
 logger = logging.getLogger(__name__)
+
+# Module-level TTL cache — shared across all client instances (acceptable: public API data)
+_price_cache: TTLCache[tuple[str, ...], dict[str, float]] = TTLCache(maxsize=512, ttl=60)
 
 
 def _is_retryable(exc: BaseException) -> bool:
@@ -63,6 +68,7 @@ class PolymarketClient:
             - ``question`` (str): human-readable market title.
             - ``active`` (bool): whether the market is currently live.
             - ``outcomes`` (list[str]): possible outcome labels.
+            - ``clobTokenIds`` (list[str]): per-outcome token IDs for CLOB queries.
 
         Raises:
             requests.HTTPError: For 4xx client errors (not retried) and 5xx
@@ -81,24 +87,27 @@ class PolymarketClient:
 
     # ---- CLOB API -----------------------------------------------------------
 
+    @cached(_price_cache, key=lambda self, token_ids: tuple(sorted(token_ids)))
     @retry(
         retry=retry_if_exception(_is_retryable),
         stop=stop_after_attempt(3),
         wait=wait_exponential(multiplier=1, min=1, max=8),
         reraise=True,
     )
-    def get_market_prices(self, market_id: str) -> dict[str, float]:
-        """Fetch mid-point prices for a market's outcome tokens from the CLOB API.
+    def get_market_prices(self, token_ids: list[str]) -> dict[str, float]:
+        """Fetch mid-point prices for outcome tokens from the CLOB API.
 
-        Calls ``GET /midpoints?token_id=<market_id>``.
+        Calls ``GET /midpoints?token_id=<id1>&token_id=<id2>...`` for batching.
+        Results are cached for 60 seconds (TTL) to prevent duplicate requests.
 
         Args:
-            market_id: The ``conditionId`` from Gamma, used as the CLOB token ID.
+            token_ids: List of CLOB token IDs (``clobTokenIds`` from Gamma market
+                objects). Binary markets have two token IDs, one per outcome.
 
         Returns:
             Dict mapping token_id -> mid-point price in [0.0, 1.0].
             - If the response contains a single ``"mid"`` key the returned dict
-              has one entry: ``{market_id: <price>}``.
+              has one entry: ``{token_ids[0]: <price>}``.
             - If the response contains a ``"midpoints"`` dict each entry is
               included directly.
 
@@ -107,12 +116,13 @@ class PolymarketClient:
                 429 errors after exhausting retries.
         """
         url = f"{self._clob_url}/midpoints"
-        params: dict[str, str] = {"token_id": market_id}
+        # Pass multiple token_id params for batching
+        params: list[tuple[str, str]] = [("token_id", tid) for tid in token_ids]
         logger.debug("GET %s params=%s", url, params)
         resp = self._session.get(url, params=params, timeout=self._timeout)
         resp.raise_for_status()
         data: Any = resp.json()
-        # CLOB may return {"mid": <price>} or {"midpoints": {token_id: price}}
+        # CLOB may return {"mid": <price>} (single token) or {"midpoints": {token_id: price}}
         if "mid" in data:
-            return {market_id: float(data["mid"])}
+            return {token_ids[0]: float(data["mid"])}
         return {k: float(v) for k, v in data.get("midpoints", {}).items()}
