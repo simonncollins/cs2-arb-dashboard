@@ -53,12 +53,13 @@ class PolymarketClient:
         reraise=True,
     )
     def get_cs2_markets(self) -> list[dict[str, Any]]:
-        """Fetch active CS2 markets from the Gamma API.
+        """Fetch active CS2 markets from the Gamma API with cursor-based pagination.
 
-        Calls ``GET /markets?tag=cs2&active=true``.
+        Calls ``GET /markets?tag=cs2&active=true`` and follows ``next_cursor``
+        until all pages are exhausted.
 
         Returns:
-            List of market dicts, each containing at minimum:
+            Flat list of market dicts across all pages, each containing at minimum:
             - ``conditionId`` (str): used as *market_id* in CLOB calls.
             - ``question`` (str): human-readable market title.
             - ``active`` (bool): whether the market is currently live.
@@ -70,14 +71,27 @@ class PolymarketClient:
         """
         url = f"{self._gamma_url}/markets"
         params: dict[str, str] = {"tag": "cs2", "active": "true"}
-        logger.debug("GET %s params=%s", url, params)
-        resp = self._session.get(url, params=params, timeout=self._timeout)
-        resp.raise_for_status()
-        data: Any = resp.json()
-        # Gamma returns either a plain list or {"markets": [...]}
-        if isinstance(data, list):
-            return data  # type: ignore[return-value]
-        return data.get("markets", [])  # type: ignore[return-value]
+        markets: list[dict[str, Any]] = []
+
+        while True:
+            logger.debug("GET %s params=%s", url, params)
+            resp = self._session.get(url, params=params, timeout=self._timeout)
+            resp.raise_for_status()
+            data: Any = resp.json()
+
+            # Gamma returns either a plain list or {"markets": [...], "next_cursor": "..."}
+            if isinstance(data, list):
+                markets.extend(data)
+                break
+            else:
+                markets.extend(data.get("markets", []))
+                next_cursor: str = data.get("next_cursor", "") or ""
+                if not next_cursor:
+                    break
+                params = {"tag": "cs2", "active": "true", "next_cursor": next_cursor}
+
+        logger.info("Fetched %d CS2 markets", len(markets))
+        return markets
 
     # ---- CLOB API -----------------------------------------------------------
 
