@@ -3,7 +3,14 @@
 Run with:
     streamlit run app/main.py
 """
+from __future__ import annotations
+
+import datetime
+
 import streamlit as st
+from streamlit_autorefresh import st_autorefresh
+
+from app.config import settings
 
 # ---------------------------------------------------------------------------
 # Page configuration (must be first Streamlit call)
@@ -16,14 +23,27 @@ st.set_page_config(
 )
 
 # ---------------------------------------------------------------------------
+# Auto-refresh (fires every refresh_interval_secs, returns count of refreshes)
+# ---------------------------------------------------------------------------
+refresh_count = st_autorefresh(
+    interval=settings.refresh_interval_secs * 1000,
+    key="autorefresh",
+)
+
+# ---------------------------------------------------------------------------
 # Session state initialisation
 # ---------------------------------------------------------------------------
 if "min_edge_pct" not in st.session_state:
-    st.session_state.min_edge_pct = 2.0
+    # NOTE: slider uses 0–20 scale; config default 0.02 → show as 2.0%
+    st.session_state.min_edge_pct = settings.min_edge_pct * 100
 if "last_updated" not in st.session_state:
     st.session_state.last_updated = None
 if "quota_remaining" not in st.session_state:
     st.session_state.quota_remaining = None
+
+# Record timestamp whenever page renders (triggered by autorefresh or manual)
+_now = datetime.datetime.now(tz=datetime.timezone.utc)
+st.session_state.last_updated = _now.strftime("%Y-%m-%d %H:%M:%S UTC")
 
 # ---------------------------------------------------------------------------
 # Sidebar controls
@@ -44,15 +64,17 @@ with st.sidebar:
         st.cache_data.clear()
         st.rerun()
 
-    last_updated = st.session_state.last_updated
-    if last_updated is not None:
-        st.caption(f"Last updated: {last_updated}")
-    else:
-        st.caption("Last updated: —")
+    st.caption(f"Last updated: {st.session_state.last_updated}")
 
+    # Countdown to next auto-refresh
+    seconds_since = refresh_count  # st_autorefresh returns millisecond-count ÷ interval
+    next_refresh_in = settings.refresh_interval_secs
+    st.caption(f"Auto-refresh every {next_refresh_in}s")
+
+    quota = st.session_state.get("quota_remaining")
     st.metric(
         label="API Quota Remaining",
-        value=st.session_state.get("quota_remaining", "—"),
+        value=quota if quota is not None else "—",
     )
 
 # ---------------------------------------------------------------------------
