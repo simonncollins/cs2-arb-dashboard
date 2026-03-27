@@ -10,7 +10,7 @@ from unittest.mock import MagicMock
 import pytest
 import requests
 
-from src.clients.polymarket_client import PolymarketClient
+from src.clients.polymarket_client import PolymarketClient, _price_cache
 
 
 # ---------------------------------------------------------------------------
@@ -157,12 +157,16 @@ class TestGetCs2Markets:
 
 
 class TestGetMarketPrices:
+    def setup_method(self) -> None:
+        """Clear module-level price cache before each test."""
+        _price_cache.clear()
+
     def test_mid_key_response(self) -> None:
-        """CLOB {"mid": "0.65"} -> {market_id: 0.65}."""
+        """CLOB {"mid": "0.65"} -> {token_ids[0]: 0.65}."""
         client, mock_session = _make_client()
         mock_session.get.return_value = _make_response({"mid": "0.65"})
 
-        result = client.get_market_prices("cond123")
+        result = client.get_market_prices(["cond123"])
 
         assert result == {"cond123": pytest.approx(0.65)}
 
@@ -172,9 +176,35 @@ class TestGetMarketPrices:
         payload = {"midpoints": {"tok1": "0.4", "tok2": "0.6"}}
         mock_session.get.return_value = _make_response(payload)
 
-        result = client.get_market_prices("cond456")
+        result = client.get_market_prices(["cond456"])
 
         assert result == {"tok1": pytest.approx(0.4), "tok2": pytest.approx(0.6)}
+
+    def test_batches_multiple_token_ids(self) -> None:
+        """Request must include multiple token_id params for batching."""
+        client, mock_session = _make_client()
+        payload = {"midpoints": {"abc": "0.3", "def": "0.7"}}
+        mock_session.get.return_value = _make_response(payload)
+
+        client.get_market_prices(["abc", "def"])
+
+        assert mock_session.get.call_args is not None
+        _, call_kwargs = mock_session.get.call_args
+        params = call_kwargs.get("params", [])
+        token_params = [v for k, v in params if k == "token_id"]
+        assert "abc" in token_params
+        assert "def" in token_params
+
+    def test_cache_prevents_second_http_call(self) -> None:
+        """Second call with same token_ids within TTL must not make an HTTP request."""
+        client, mock_session = _make_client()
+        mock_session.get.return_value = _make_response({"midpoints": {"unique_cache_tok": "0.5"}})
+
+        client.get_market_prices(["unique_cache_tok"])
+        client.get_market_prices(["unique_cache_tok"])
+
+        # Cache should have intercepted the second call
+        assert mock_session.get.call_count == 1
 
     def test_raises_http_error_on_429_after_retries(self) -> None:
         """429 Too Many Requests must be retried, then raise."""
@@ -182,6 +212,6 @@ class TestGetMarketPrices:
         mock_session.get.return_value = _make_response({}, status_code=429)
 
         with pytest.raises(requests.HTTPError):
-            client.get_market_prices("cond789")
+            client.get_market_prices(["cond789"])
 
         assert mock_session.get.call_count == 3
