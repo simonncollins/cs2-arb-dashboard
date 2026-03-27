@@ -61,7 +61,7 @@ class RateLimiter:
         """
 
         @functools.wraps(func)
-        def wrapper(*args: Any, **kwargs: Any) -> Any:  # noqa: ANN401
+        def wrapper(*args: Any, **kwargs: Any) -> Any:
             key = func.__qualname__
             now = time.monotonic()
             elapsed = now - self._last_called[key]

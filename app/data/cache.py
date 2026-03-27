@@ -65,7 +65,7 @@ def cached(ttl_seconds: int, maxsize: int = 256) -> Callable[[_F], _F]:
 
     def decorator(func: _F) -> _F:
         @functools.wraps(func)
-        def wrapper(*args: Any, **kwargs: Any) -> Any:  # noqa: ANN401
+        def wrapper(*args: Any, **kwargs: Any) -> Any:
             key = (args, tuple(sorted(kwargs.items())))
             if key in _cache:
                 return _cache[key]
