@@ -10,8 +10,8 @@ Per-source recommended TTLs:
 """
 from __future__ import annotations
 
-import functools
 from collections.abc import Callable
+import functools
 from typing import Any, TypeVar
 
 from cachetools import TTLCache
