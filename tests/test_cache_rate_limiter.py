@@ -2,9 +2,6 @@
 from __future__ import annotations
 
 import time
-from unittest.mock import MagicMock
-
-import pytest
 
 from app.data.cache import ODDS_API_TTL_SECS, POLYMARKET_TTL_SECS, cached, make_ttl_cache
 from app.data.rate_limiter import RateLimiter
