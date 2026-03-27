@@ -64,11 +64,11 @@ class TestSettingsOverrides:
 class TestSettingsImport:
     def test_singleton_importable(self) -> None:
         """The module-level `settings` singleton must be importable."""
-        from app.config import settings  # noqa: PLC0415
+        from app.config import settings
 
         assert isinstance(settings, Settings)
 
     def test_min_edge_pct_is_float(self) -> None:
-        from app.config import settings  # noqa: PLC0415
+        from app.config import settings
 
         assert isinstance(settings.min_edge_pct, float)
