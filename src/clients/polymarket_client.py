@@ -8,8 +8,8 @@ import requests
 from cachetools import TTLCache, cached
 from tenacity import retry, retry_if_exception, stop_after_attempt, wait_exponential
 
-# TODO: migrate to from app.config import settings once #51 lands
 import config
+# TODO: migrate to from app.config import settings once #51 lands
 
 logger = logging.getLogger(__name__)
 
