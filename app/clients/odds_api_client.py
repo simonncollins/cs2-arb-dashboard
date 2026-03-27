@@ -3,9 +3,9 @@ from __future__ import annotations
 
 from typing import Any
 
-from cachetools import TTLCache
 import requests
 import structlog
+from cachetools import TTLCache
 from tenacity import retry, retry_if_exception, stop_after_attempt, wait_exponential
 
 from app.config import settings
