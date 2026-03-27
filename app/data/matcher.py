@@ -6,8 +6,8 @@ RapidFuzz token-sort-ratio scoring and a curated team alias table.
 from __future__ import annotations
 
 import json
-from pathlib import Path
 import unicodedata
+from pathlib import Path
 
 import structlog
 from rapidfuzz import fuzz
