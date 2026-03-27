@@ -42,6 +42,9 @@ class Settings(BaseSettings):
     # --- Dashboard behaviour -----------------------------------------------
     refresh_interval_secs: int = Field(default=60, alias="REFRESH_INTERVAL_SECS")
 
+    # --- Rate limiting -----------------------------------------------------
+    rate_limit_delay_secs: float = Field(default=1.0, alias="RATE_LIMIT_DELAY_SECS")
+
     # --- Polymarket API URLs -----------------------------------------------
     polymarket_gamma_url: str = Field(
         default="https://gamma-api.polymarket.com",
