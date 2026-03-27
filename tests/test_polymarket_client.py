@@ -106,6 +106,50 @@ class TestGetCs2Markets:
         # tenacity retries 3 times total (1 initial + 2 retries = 3 calls)
         assert mock_session.get.call_count == 3
 
+    def test_two_page_pagination(self) -> None:
+        """Two pages of results are accumulated into one flat list."""
+        client, mock_session = _make_client()
+        mock_session.get.side_effect = [
+            _make_response({"markets": [{"conditionId": "A"}], "next_cursor": "tok1"}),
+            _make_response({"markets": [{"conditionId": "B"}]}),
+        ]
+
+        result = client.get_cs2_markets()
+
+        assert len(result) == 2
+        assert result[0]["conditionId"] == "A"
+        assert result[1]["conditionId"] == "B"
+        # Second call must include next_cursor param
+        assert mock_session.get.call_count == 2
+        second_call_kwargs = mock_session.get.call_args_list[1][1]
+        assert second_call_kwargs.get("params", {}).get("next_cursor") == "tok1"
+
+    def test_three_page_pagination(self) -> None:
+        """Multiple pages are fully consumed until next_cursor is absent."""
+        client, mock_session = _make_client()
+        mock_session.get.side_effect = [
+            _make_response({"markets": [{"conditionId": "A"}], "next_cursor": "tok1"}),
+            _make_response({"markets": [{"conditionId": "B"}], "next_cursor": "tok2"}),
+            _make_response({"markets": [{"conditionId": "C"}]}),
+        ]
+
+        result = client.get_cs2_markets()
+
+        assert len(result) == 3
+        assert mock_session.get.call_count == 3
+
+    def test_empty_next_cursor_stops_pagination(self) -> None:
+        """An empty string next_cursor must stop pagination."""
+        client, mock_session = _make_client()
+        mock_session.get.return_value = _make_response(
+            {"markets": [{"conditionId": "A"}], "next_cursor": ""}
+        )
+
+        result = client.get_cs2_markets()
+
+        assert len(result) == 1
+        assert mock_session.get.call_count == 1
+
 
 # ---------------------------------------------------------------------------
 # get_market_prices
