@@ -14,10 +14,10 @@ Usage::
 """
 from __future__ import annotations
 
-import functools
-import time
 from collections import defaultdict
 from collections.abc import Callable
+import functools
+import time
 from typing import Any, TypeVar
 
 import structlog
