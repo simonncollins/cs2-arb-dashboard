@@ -1,7 +1,7 @@
 """Unit tests for app.models Pydantic v2 data models."""
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import pytest
 from pydantic import ValidationError
@@ -32,7 +32,7 @@ VALID_BOOK = {
     "team_b": "FaZe Clan",
     "decimal_odds": {"NaVi": 1.85, "FaZe": 2.10},
     "implied_probs": {"NaVi": 0.5405, "FaZe": 0.4762},
-    "fetched_at": datetime(2026, 6, 15, 12, 0, 0, tzinfo=timezone.utc),
+    "fetched_at": datetime(2026, 6, 15, 12, 0, 0, tzinfo=UTC),
 }
 
 

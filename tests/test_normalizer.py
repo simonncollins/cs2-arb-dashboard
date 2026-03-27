@@ -1,7 +1,7 @@
 """Unit tests for app.ingestion.normalizer."""
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import pytest
 
@@ -51,7 +51,7 @@ def _make_book_odds(
         team_b=team_b,
         decimal_odds={team_a: round(1.0 / prob_a, 4), team_b: round(1.0 / prob_b, 4)},
         implied_probs={team_a: prob_a, team_b: prob_b},
-        fetched_at=datetime.now(timezone.utc),
+        fetched_at=datetime.now(UTC),
     )
 
 

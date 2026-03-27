@@ -1,7 +1,7 @@
 """Unit tests for app.data.matcher."""
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from app.data.matcher import match_events, normalize_team_name
 from app.models import BookmakerOdds, PolymarketMarket
@@ -33,7 +33,7 @@ def _make_book(team_a: str, team_b: str) -> BookmakerOdds:
         team_b=team_b,
         decimal_odds={team_a: 1.8, team_b: 2.2},
         implied_probs={team_a: 0.556, team_b: 0.455},
-        fetched_at=datetime.now(timezone.utc),
+        fetched_at=datetime.now(UTC),
     )
 
 

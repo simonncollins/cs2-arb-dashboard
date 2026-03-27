@@ -42,7 +42,7 @@ if "quota_remaining" not in st.session_state:
     st.session_state.quota_remaining = None
 
 # Record timestamp whenever page renders (triggered by autorefresh or manual)
-_now = datetime.datetime.now(tz=datetime.timezone.utc)
+_now = datetime.datetime.now(tz=datetime.UTC)
 st.session_state.last_updated = _now.strftime("%Y-%m-%d %H:%M:%S UTC")
 
 # ---------------------------------------------------------------------------
