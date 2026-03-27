@@ -5,7 +5,7 @@ construction from matched Polymarket/bookmaker event pairs.
 """
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any
 
 from app.models import ArbitrageOpportunity, BookmakerOdds, PolymarketMarket
@@ -118,7 +118,7 @@ def normalize_bookmaker_event(event: dict[str, Any]) -> BookmakerOdds:
         team_b=away,
         decimal_odds=best_decimal,
         implied_probs=remove_vig(best_implied),
-        fetched_at=datetime.utcnow(),
+        fetched_at=datetime.now(timezone.utc),
     )
 
 

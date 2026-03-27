@@ -25,7 +25,7 @@ st.set_page_config(
 # ---------------------------------------------------------------------------
 # Auto-refresh (fires every refresh_interval_secs, returns count of refreshes)
 # ---------------------------------------------------------------------------
-refresh_count = st_autorefresh(
+st_autorefresh(
     interval=settings.refresh_interval_secs * 1000,
     key="autorefresh",
 )
@@ -67,7 +67,6 @@ with st.sidebar:
     st.caption(f"Last updated: {st.session_state.last_updated}")
 
     # Countdown to next auto-refresh
-    seconds_since = refresh_count  # st_autorefresh returns millisecond-count ÷ interval
     next_refresh_in = settings.refresh_interval_secs
     st.caption(f"Auto-refresh every {next_refresh_in}s")
 
