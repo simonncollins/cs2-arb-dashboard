@@ -5,7 +5,7 @@ construction from matched Polymarket/bookmaker event pairs.
 """
 from __future__ import annotations
 
-from datetime import datetime, UTC
+from datetime import UTC, datetime
 from typing import Any
 
 from app.models import ArbitrageOpportunity, BookmakerOdds, PolymarketMarket

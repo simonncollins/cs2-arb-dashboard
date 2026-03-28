@@ -1,7 +1,7 @@
 """Unit tests for app.models Pydantic v2 data models."""
 from __future__ import annotations
 
-from datetime import datetime, UTC
+from datetime import UTC, datetime
 
 import pytest
 from pydantic import ValidationError
