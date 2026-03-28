@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import time
 
-from app.data.cache import ODDS_API_TTL_SECS, POLYMARKET_TTL_SECS, cached, make_ttl_cache
+from app.data.cache import cached, make_ttl_cache, ODDS_API_TTL_SECS, POLYMARKET_TTL_SECS
 from app.data.rate_limiter import RateLimiter
 
 
