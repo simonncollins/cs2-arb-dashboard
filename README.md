@@ -1,20 +1,41 @@
 # CS2 Esports Arbitrage Dashboard
 
-Real-time dashboard comparing Polymarket CS2 prediction market odds against traditional bookmaker odds (via The Odds API) to surface potential arbitrage opportunities.
+A Streamlit dashboard that compares **Polymarket** prediction market odds against **traditional bookmaker** implied probabilities for CS2 esports matches, surfacing potential arbitrage opportunities.
 
-**Informational only — no trade execution.**
+## Features
 
-## Stack
-- **Frontend**: Streamlit (Python)
-- **Hosting**: Streamlit Community Cloud (free)
-- **Data**: Polymarket CLOB API (no auth) + The Odds API (free tier)
+- **Live data ingestion** from Polymarket CLOB API and The Odds API
+- **Fuzzy event matching** to correlate markets across platforms
+- **Arbitrage detection engine** with configurable minimum-edge threshold
+- **Expected-value (EV) calculator**
+- **Auto-refreshing dashboard** (every 60 seconds)
+- **Webhook / in-app alerts** for high-value opportunities
+
+## Data Sources
+
+- [Polymarket CLOB API](https://clob.polymarket.com)
+- [The Odds API](https://the-odds-api.com) (CS2 BO3 markets)
 
 ## Setup
+
 ```bash
+# Clone and install
+git clone https://github.com/simonncollins/cs2-arb-dashboard
+cd cs2-arb-dashboard
 pip install -r requirements.txt
-cp .env.example .env   # fill in ODDS_API_KEY
+
+# Configure secrets
+cp .streamlit/secrets.toml.example .streamlit/secrets.toml
+# Edit .streamlit/secrets.toml and add your ODDS_API_KEY
+
+# Run locally
 streamlit run app.py
 ```
 
-## Target Event
-IEM Cologne Major 2026 — June 2–21
+## Deployment
+
+Deploy to [Streamlit Community Cloud](https://streamlit.io/cloud). Set `ODDS_API_KEY` in the app's Secrets settings.
+
+## Disclaimer
+
+**Informational only — not financial advice.** Arbitrage opportunities may close before execution. Always verify odds independently before acting.
