@@ -3,8 +3,8 @@ from __future__ import annotations
 
 from datetime import UTC, datetime
 
-import pytest
 from pydantic import ValidationError
+import pytest
 
 from app.models import ArbitrageOpportunity, BookmakerOdds, PolymarketMarket
 
