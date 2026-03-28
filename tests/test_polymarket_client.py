@@ -10,7 +10,7 @@ from unittest.mock import MagicMock
 import pytest
 import requests
 
-from src.clients.polymarket_client import _price_cache, PolymarketClient
+from src.clients.polymarket_client import PolymarketClient, _price_cache
 
 
 # ---------------------------------------------------------------------------

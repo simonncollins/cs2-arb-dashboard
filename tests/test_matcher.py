@@ -1,7 +1,7 @@
 """Unit tests for app.data.matcher."""
 from __future__ import annotations
 
-from datetime import UTC, datetime
+from datetime import datetime, UTC
 
 from app.data.matcher import match_events, normalize_team_name
 from app.models import BookmakerOdds, PolymarketMarket
