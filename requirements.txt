@@ -1,7 +1,8 @@
-streamlit>=1.32.0
-streamlit-autorefresh>=1.0.1
-requests>=2.31.0
-py-clob-client>=0.14.0
-pandas>=2.2.0
-numpy>=1.26.0
-python-dotenv>=1.0.0
+streamlit==1.32.0
+streamlit-autorefresh==1.0.1
+pandas==2.2.1
+requests==2.31.0
+thefuzz==0.22.1
+python-Levenshtein==0.25.0
+pytest==8.1.0
+pytest-mock==3.14.0

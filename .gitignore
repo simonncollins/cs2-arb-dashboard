@@ -1,25 +1,12 @@
-# Environment secrets — never commit
-.env
-
-# Python cache
+.streamlit/secrets.toml
 __pycache__/
-*.py[cod]
+*.pyc
 *.pyo
-
-# Virtual environments
 .venv/
 venv/
-env/
-
-# Distribution / packaging
+.env
+*.egg-info/
 dist/
 build/
-*.egg-info/
-
-# IDE
-.vscode/
-.idea/
-
-# OS
-.DS_Store
-Thumbs.db
+.pytest_cache/
+.mypy_cache/
