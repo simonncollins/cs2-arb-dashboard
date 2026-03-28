@@ -1,16 +1,31 @@
 name: CI
 
-on: [push, pull_request]
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
 
 jobs:
-  test:
+  lint-and-test:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: "3.11"
+
       - name: Install dependencies
         run: pip install -r requirements.txt
+
+      - name: Run ruff (linter)
+        run: ruff check .
+
+      - name: Run mypy (type checker)
+        run: mypy .
+
       - name: Run tests
         run: pytest --tb=short

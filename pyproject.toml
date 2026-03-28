@@ -9,5 +9,20 @@ requires-python = ">=3.11"
 description = "CS2 Esports Arbitrage Dashboard — Polymarket vs Bookmakers"
 readme = "README.md"
 
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "N", "B", "A", "RUF"]
+ignore = []
+
+[tool.ruff.lint.isort]
+known-first-party = ["config"]
+
+[tool.mypy]
+python_version = "3.11"
+ignore_missing_imports = true
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
