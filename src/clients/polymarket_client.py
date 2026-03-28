@@ -4,12 +4,12 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from cachetools import cached, TTLCache
 import requests
+from cachetools import TTLCache, cached
 from tenacity import retry, retry_if_exception, stop_after_attempt, wait_exponential
 
-import config
 # TODO: migrate to from app.config import settings once #51 lands
+import config
 
 logger = logging.getLogger(__name__)
 
