@@ -24,9 +24,9 @@ The WS endpoint used is::
 from __future__ import annotations
 
 import asyncio
-from collections.abc import Callable, Coroutine
 import json
 import logging
+from collections.abc import Callable, Coroutine
 from typing import Any
 
 import websockets
