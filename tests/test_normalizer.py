@@ -1,7 +1,7 @@
 """Unit tests for app.ingestion.normalizer."""
 from __future__ import annotations
 
-from datetime import UTC, datetime
+from datetime import datetime, UTC
 
 import pytest
 
