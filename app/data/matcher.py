@@ -9,8 +9,8 @@ import json
 import unicodedata
 from pathlib import Path
 
-from rapidfuzz import fuzz
 import structlog
+from rapidfuzz import fuzz
 
 from app.models import BookmakerOdds, PolymarketMarket
 
