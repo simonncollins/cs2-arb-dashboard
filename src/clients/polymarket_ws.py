@@ -123,7 +123,7 @@ class PolymarketWSClient:
             async for raw_message in ws:
                 await self._handle_message(raw_message)
 
-    async def _send_subscribe(self, ws: websockets.WebSocketClientProtocol) -> None:
+    async def _send_subscribe(self, ws: Any) -> None:
         """Send the subscription request for all tracked market IDs.
 
         Polymarket WS accepts a JSON message of the form::

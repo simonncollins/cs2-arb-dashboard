@@ -127,7 +127,7 @@ class OddsAPIClient:
         cache_key = (regions, markets, odds_format)
         if cache_key in self._odds_cache:
             logger.debug("odds_api_cache_hit", key=cache_key)
-            return cast(list[dict[str, Any]], self._odds_cache[cache_key])
+            return self._odds_cache[cache_key]
 
         result = self._fetch_cs2_odds(regions, markets, odds_format)
         self._odds_cache[cache_key] = result
