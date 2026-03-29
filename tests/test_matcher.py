@@ -6,7 +6,6 @@ from datetime import UTC, datetime
 from app.data.matcher import match_events, normalize_team_name
 from app.models import BookmakerOdds, PolymarketMarket
 
-
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------

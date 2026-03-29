@@ -8,7 +8,6 @@ from pydantic import ValidationError
 
 from app.models import ArbitrageOpportunity, BookmakerOdds, PolymarketMarket
 
-
 # ---------------------------------------------------------------------------
 # Fixtures
 # ---------------------------------------------------------------------------

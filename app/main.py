@@ -34,7 +34,7 @@ st_autorefresh(
 # Session state initialisation
 # ---------------------------------------------------------------------------
 if "min_edge_pct" not in st.session_state:
-    # NOTE: slider uses 0–20 scale; config default 0.02 → show as 2.0%
+    # NOTE: slider uses 0-20 scale; config default 0.02 -> show as 2.0%
     st.session_state.min_edge_pct = settings.min_edge_pct * 100
 if "last_updated" not in st.session_state:
     st.session_state.last_updated = None

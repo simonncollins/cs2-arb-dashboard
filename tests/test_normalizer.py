@@ -14,7 +14,6 @@ from app.ingestion.normalizer import (
 )
 from app.models import ArbitrageOpportunity, BookmakerOdds, PolymarketMarket
 
-
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
