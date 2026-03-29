@@ -11,7 +11,8 @@ Per-source recommended TTLs:
 from __future__ import annotations
 
 import functools
-from typing import Any, Callable, TypeVar
+from collections.abc import Callable
+from typing import Any, TypeVar
 
 from cachetools import TTLCache
 
@@ -64,7 +65,7 @@ def cached(ttl_seconds: int, maxsize: int = 256) -> Callable[[_F], _F]:
 
     def decorator(func: _F) -> _F:
         @functools.wraps(func)
-        def wrapper(*args: Any, **kwargs: Any) -> Any:  # noqa: ANN401
+        def wrapper(*args: Any, **kwargs: Any) -> Any:
             key = (args, tuple(sorted(kwargs.items())))
             if key in _cache:
                 return _cache[key]

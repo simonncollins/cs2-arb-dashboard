@@ -12,7 +12,6 @@ import requests
 
 from app.clients.odds_api_client import OddsAPIClient, QuotaExhaustedError
 
-
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------

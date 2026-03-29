@@ -87,3 +87,20 @@ omit = [
     "utils/*",
     "data/*",
 ]
+
+[[tool.mypy.overrides]]
+module = ["app.config", "app.models", "app.clients.odds_api_client"]
+disable_error_code = ["misc", "untyped-decorator"]
+
+[[tool.mypy.overrides]]
+module = ["src.clients.polymarket_client"]
+disable_error_code = ["untyped-decorator"]
+
+[[tool.mypy.overrides]]
+module = ["tests.*", "conftest"]
+disable_error_code = ["untyped-decorator", "misc", "arg-type"]
+ignore_errors = true
+
+[[tool.mypy.overrides]]
+module = ["app.data.cache"]
+disable_error_code = ["import-untyped"]

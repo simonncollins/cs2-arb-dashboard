@@ -5,7 +5,6 @@ live network connections are made.
 """
 from __future__ import annotations
 
-import asyncio
 import json
 from collections.abc import AsyncIterator
 from typing import Any
@@ -14,7 +13,6 @@ from unittest.mock import AsyncMock, MagicMock, patch
 import pytest
 
 from src.clients.polymarket_ws import PolymarketWSClient
-
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -215,12 +213,10 @@ async def test_reconnect_on_connection_closed() -> None:
         base_backoff_secs=0.001,  # fast for tests
     )
 
-    original_connect_and_stream = client._connect_and_stream
-
     async def failing_connect() -> None:
         nonlocal call_count
         call_count += 1
-        raise ConnectionClosed(None, None)  # type: ignore[arg-type]
+        raise ConnectionClosed(None, None)
 
     client._connect_and_stream = failing_connect  # type: ignore[method-assign]
 

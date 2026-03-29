@@ -1,7 +1,7 @@
 """The Odds API client for fetching CS2/esports bookmaker odds."""
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, cast
 
 import requests
 import structlog
@@ -91,7 +91,7 @@ class OddsAPIClient:
             raise QuotaExhaustedError(remaining)
 
         data: Any = resp.json()
-        return data  # type: ignore[return-value]
+        return data  # type: ignore[no-any-return]
 
     # ---- Public API --------------------------------------------------------
 
@@ -154,4 +154,4 @@ class OddsAPIClient:
         resp = self._session.get(url, params=params, timeout=10)
         resp.raise_for_status()
         data: Any = resp.json()
-        return [item["key"] for item in data]
+        return cast(list[str], [item["key"] for item in data])
