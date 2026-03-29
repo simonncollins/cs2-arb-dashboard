@@ -216,7 +216,7 @@ async def test_reconnect_on_connection_closed() -> None:
     async def failing_connect() -> None:
         nonlocal call_count
         call_count += 1
-        raise ConnectionClosed(None, None)  # type: ignore[arg-type]
+        raise ConnectionClosed(None, None)
 
     client._connect_and_stream = failing_connect  # type: ignore[method-assign]
 
