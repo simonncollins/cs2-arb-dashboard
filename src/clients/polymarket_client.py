@@ -51,7 +51,7 @@ class PolymarketClient:
 
     # ---- Gamma API ----------------------------------------------------------
 
-    @retry(
+    @retry(  # type: ignore[misc]
         retry=retry_if_exception(_is_retryable),
         stop=stop_after_attempt(3),
         wait=wait_exponential(multiplier=1, min=1, max=8),
@@ -101,8 +101,8 @@ class PolymarketClient:
 
     # ---- CLOB API -----------------------------------------------------------
 
-    @cached(_price_cache, key=lambda self, token_ids: tuple(sorted(token_ids)))
-    @retry(
+    @cached(_price_cache, key=lambda self, token_ids: tuple(sorted(token_ids)))  # type: ignore[misc]
+    @retry(  # type: ignore[misc]
         retry=retry_if_exception(_is_retryable),
         stop=stop_after_attempt(3),
         wait=wait_exponential(multiplier=1, min=1, max=8),
