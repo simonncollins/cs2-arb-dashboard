@@ -183,8 +183,8 @@ class TestBuildOpportunities:
 
     def test_no_positive_edge_returns_empty(self) -> None:
         """Polymarket prob lower than book prob -> no opportunity."""
-        poly = _make_poly_market(prob_a=0.4)  # NaVi at 0.4
-        book = _make_book_odds(prob_a=0.6)    # Book has NaVi at 0.6 (poly*0.98=0.392 < 0.6)
+        poly = _make_poly_market(prob_a=0.5)  # NaVi at 0.5
+        book = _make_book_odds(prob_a=0.5)    # Book has NaVi at 0.5 (poly*0.98=0.49 < 0.5)
         result = build_opportunities([(poly, book)])
         assert result == []
 

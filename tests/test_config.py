@@ -44,10 +44,10 @@ def test_env_example_keys_documented() -> None:
     content = env_example.read_text()
     required_keys = [
         "ODDS_API_KEY",
-        "POLYMARKET_CLOB_HOST",
-        "MIN_ARBITRAGE_EDGE_PCT",  # aligned with config.py
-        "CACHE_TTL_SECONDS",
-        "LOG_LEVEL",
+        "POLYMARKET_GAMMA_URL",
+        "POLYMARKET_CLOB_URL",
+        "MIN_EDGE_PCT",
+        "REFRESH_INTERVAL_SECS",
     ]
     for key in required_keys:
         assert key in content, f"Expected env var '{key}' to be documented in .env.example"
