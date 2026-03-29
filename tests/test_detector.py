@@ -6,7 +6,6 @@ from datetime import datetime
 from app.engine.detector import detect_arbitrage
 from app.models import ArbitrageOpportunity, BookmakerOdds, PolymarketMarket
 
-
 # ---------------------------------------------------------------------------
 # Helpers / fixtures
 # ---------------------------------------------------------------------------
