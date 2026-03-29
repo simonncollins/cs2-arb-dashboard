@@ -10,3 +10,7 @@ MIN_ARBITRAGE_EDGE_PCT: float = float(os.getenv("MIN_ARBITRAGE_EDGE_PCT", "2.0")
 POLYMARKET_GAMMA_URL: str = "https://gamma-api.polymarket.com"
 POLYMARKET_CLOB_URL: str = "https://clob.polymarket.com"
 ODDS_API_BASE_URL: str = "https://api.the-odds-api.com/v4"
+
+# Alerting — optional webhook URLs (leave empty to disable)
+SLACK_WEBHOOK_URL: str = os.getenv("SLACK_WEBHOOK_URL", "")
+ALERT_WEBHOOK_URL: str = os.getenv("ALERT_WEBHOOK_URL", "")
