@@ -99,54 +99,68 @@ def render_arb_table(opportunities: list[Any]) -> None:
             objects to display.
     """
     if not opportunities:
-        st.info("No arbitrage opportunities found. Check back after the next refresh.")
+        st.info(
+            "🔍 No arbitrage opportunities found above the current edge threshold. "
+            "Try lowering the Min Edge % slider in the sidebar."
+        )
         return
 
     df = _opps_to_df(opportunities)
+    df = df.sort_values("Edge %", ascending=False).reset_index(drop=True)
 
     # Sort controls
     sort_col = st.selectbox(
         "Sort by",
-        options=["Edge %", "Volume ($)", "EV (adj)", "Event"],
+        options=["Edge %", "Volume ($)", "EV (adj)", "Poly Prob", "Book Prob"],
         index=0,
-        key="arb_sort_col",
+        key="arb_table_sort",
     )
-    sort_asc = st.checkbox("Ascending", value=False, key="arb_sort_asc")
-    df = df.sort_values(sort_col, ascending=sort_asc)
+    ascending = st.checkbox("Ascending", value=False, key="arb_table_asc")
+    df = df.sort_values(sort_col, ascending=ascending).reset_index(drop=True)
 
-    # Edge % color coding helper (via column config)
-    def _edge_color(val: float) -> str:
-        if val >= 5.0:
-            return "green"
-        if val >= 2.0:
-            return "yellow"
-        return "grey"
+    # Hide internal BLAST bool column in display
+    display_df = df.drop(columns=["BLAST"])
 
     st.dataframe(
-        df,
+        display_df,
         use_container_width=True,
         column_config={
-            "Poly Prob": st.column_config.NumberColumn(
-                "Poly Prob", format="%.1f%%", help="Polymarket implied probability"
+            "Poly Prob": st.column_config.ProgressColumn(
+                "Poly Prob",
+                format="%.1f%%",
+                min_value=0.0,
+                max_value=1.0,
             ),
-            "Book Prob": st.column_config.NumberColumn(
-                "Book Prob", format="%.1f%%", help="Bookmaker implied probability"
+            "Book Prob": st.column_config.ProgressColumn(
+                "Book Prob",
+                format="%.1f%%",
+                min_value=0.0,
+                max_value=1.0,
             ),
             "Edge %": st.column_config.NumberColumn(
-                "Edge %", format="%.2f%%", help="Mispricing edge percentage"
+                "Edge %",
+                format="%.2f%%",
             ),
             "EV (adj)": st.column_config.NumberColumn(
-                "EV (adj)", format="$%.4f", help="Adjusted expected value per $1 stake"
+                "EV (adj)",
+                format="%.4f",
             ),
             "Volume ($)": st.column_config.NumberColumn(
-                "Volume ($)", format="$%.0f", help="Polymarket market liquidity"
+                "Volume ($)",
+                format="$%.0f",
             ),
             "Kelly %": st.column_config.NumberColumn(
-                "Kelly %", format="%.2f%%", help="Kelly criterion fraction (informational)"
-            ),
-            "BLAST": st.column_config.CheckboxColumn(
-                "BLAST", help="BLAST/major tournament event"
+                "Kelly %",
+                format="%.2f%%",
+                help="Kelly fraction (display only — not financial advice)",
             ),
         },
         hide_index=True,
+    )
+
+    blast_count = df["BLAST"].sum()
+    total = len(df)
+    st.caption(
+        f"Showing {total} opportunit{'y' if total == 1 else 'ies'}"
+        + (f" — {blast_count} from BLAST/major events ⚡" if blast_count else "")
     )
