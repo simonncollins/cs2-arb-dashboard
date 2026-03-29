@@ -95,7 +95,7 @@ class OddsAPIClient:
 
     # ---- Public API --------------------------------------------------------
 
-    @retry(  # type: ignore[misc]
+    @retry(
         retry=retry_if_exception(_is_retryable),
         stop=stop_after_attempt(3),
         wait=wait_exponential(multiplier=1, min=1, max=8),
@@ -133,7 +133,7 @@ class OddsAPIClient:
         self._odds_cache[cache_key] = result
         return result
 
-    @retry(  # type: ignore[misc]
+    @retry(
         retry=retry_if_exception(_is_retryable),
         stop=stop_after_attempt(3),
         wait=wait_exponential(multiplier=1, min=1, max=8),
