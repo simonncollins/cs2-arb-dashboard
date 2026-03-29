@@ -11,11 +11,10 @@ from typing import TYPE_CHECKING, Any, Protocol
 import pandas as pd
 import streamlit as st
 
+from cs2_arb.data.blast_events import is_blast_event
+
 if TYPE_CHECKING:
     pass
-
-# BLAST tournament keywords for visual flagging
-_BLAST_KEYWORDS = ("blast", "iem", "esl", "major", "cologne", "rio", "paris")
 
 
 class _OppProto(Protocol):
@@ -36,8 +35,7 @@ class _OppProto(Protocol):
 
 def _is_blast(event_name: str) -> bool:
     """Return True if the event name matches a known BLAST/major tournament."""
-    lower = event_name.lower()
-    return any(kw in lower for kw in _BLAST_KEYWORDS)
+    return is_blast_event(event_name)
 
 
 def _opps_to_df(opportunities: list[Any]) -> pd.DataFrame:

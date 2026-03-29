@@ -9,7 +9,6 @@ from pathlib import Path
 
 from cs2_arb.alerts.alerter import AlertManager
 
-
 # ---------------------------------------------------------------------------
 # Stub opportunity
 # ---------------------------------------------------------------------------

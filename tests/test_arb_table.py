@@ -13,7 +13,6 @@ import pytest
 
 from cs2_arb.ui.arb_table import _is_blast, _opps_to_df
 
-
 # ---------------------------------------------------------------------------
 # Minimal stub matching the _OppProto protocol
 # ---------------------------------------------------------------------------

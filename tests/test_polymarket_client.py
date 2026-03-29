@@ -7,7 +7,6 @@ import requests
 
 from cs2_arb.api.polymarket import PolymarketClient, PolymarketError, PolymarketMarket
 
-
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
